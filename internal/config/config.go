@@ -35,7 +35,7 @@ type DB struct {
 	Port     string
 	Username string
 	Password string
-	DBName   string
+	Name     string
 	SSLMode  string
 }
 
@@ -51,17 +51,16 @@ func Get(logger log.Logger) (*Config, error) {
 	}
 
 	db := DB{
-		Host:     viper.GetString("db.host"),
-		Port:     viper.GetString("db.port"),
-		Username: viper.GetString("db.username"),
-		DBName:   viper.GetString("db.dbname"),
-		SSLMode:  viper.GetString("db.sslmode"),
+		Port:     os.Getenv("DB_PORT"),
+		Username: os.Getenv("DB_USER"),
 		Password: os.Getenv("DB_PASSWORD"),
+		Name:     os.Getenv("DB_NAME"),
+		Host:     os.Getenv("DB_HOST"),
 	}
 
-	port := os.Getenv("PORT") //Get port from .env file, we did not specify any port so this should return an empty string when tested locally
+	port := os.Getenv("PORT") // Get port from .env file, we did not specify any port so this should return an empty string when tested locally
 	if port == "" {
-		port = "9000" //localhost
+		port = "9000" // localhost
 	}
 
 	server := Server{
@@ -75,6 +74,8 @@ func Get(logger log.Logger) (*Config, error) {
 
 }
 
+// TODO:
+// Deprecated: Viper is no longer used
 func initializeConfig() error {
 	viper.AddConfigPath(path)
 	viper.SetConfigName(fileName)
