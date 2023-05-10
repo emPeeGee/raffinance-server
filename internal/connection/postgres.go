@@ -2,6 +2,7 @@ package connection
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/emPeeGee/raffinance/internal/config"
 	"gorm.io/driver/postgres"
@@ -10,7 +11,15 @@ import (
 )
 
 func NewPostgresDB(cfg config.DB) (*gorm.DB, error) {
-	dsn := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s", cfg.Host, cfg.Port, cfg.Username, cfg.DBName, cfg.Password, cfg.SSLMode)
+
+	// TODO: BAD
+	dbPort := os.Getenv("DB_PORT")
+	username := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	dbHost := os.Getenv("DB_HOST")
+
+	dsn := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s", dbHost, dbPort, username, dbName, password, "disable")
 	fmt.Println(dsn)
 
 	gormDB, err := gorm.Open(postgres.New(postgres.Config{
